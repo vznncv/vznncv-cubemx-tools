@@ -1,0 +1,111 @@
+################################################################
+# Project information
+################################################################
+cmake_minimum_required(VERSION {{ cmake_version }})
+project({{ project.name }})
+
+
+################################################################
+# Toolhain configuration
+################################################################
+
+##
+# compilator options
+##
+# specify toolchaing
+find_program(ARM_GCC_PATH arm-none-eabi-gcc)
+get_filename_component(ARM_GCC_PATH ${ARM_GCC_PATH} DIRECTORY)
+include (CMakeForceCompiler)
+set(CMAKE_SYSTEM_NAME Generic)
+cmake_force_c_compiler(arm-none-eabi-gcc GNU)
+cmake_force_cxx_compiler(arm-none-eabi-g++ GNU)
+set(CMAKE_ASM_COMPILER "${ARM_GCC_PATH}/arm-none-eabi-gcc")
+enable_language(ASM)
+set(CMAKE_OBJCOPY "${ARM_GCC_PATH}/arm-none-eabi-objcopy")
+set(CMAKE_LINKER "${ARM_GCC_PATH}/arm-none-eabi-ld")
+
+
+################################################################
+# build directory
+################################################################
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/{{ project.build_dir }})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+
+################################################################
+# Source files locations
+################################################################
+# include directories
+include_directories(
+{% for include_dir in project.include_dirs %}
+    "{{ include_dir }}"
+{% endfor %}
+)
+# add sources
+file(GLOB PROJECT_SOURCES
+{% for glob_expression in project.source.globs %}
+    "{{ glob_expression }}"
+{% endfor %}
+)
+list(REMOVE_ITEM PROJECT_SOURCES
+{% for remove_file in project.source.remove_files %}
+    "${CMAKE_CURRENT_SOURCE_DIR}/{{ remove_file }}"
+{% endfor %}
+)
+list(APPEND PROJECT_SOURCES
+{% for file in project.source.files %}
+    "{{ file }}"
+{% endfor %}
+)
+
+
+################################################################
+# Preprocessor definitions
+################################################################
+{% for definition in project.definitions %}
+add_definitions(-D{{ definition }})
+{% endfor %}
+
+
+################################################################
+# Compilation options
+################################################################
+# debug/optimization flags
+set(OPTIMIZATION_FLAGS "{{ project.optimization_flags|join(' ') }}" CACHE STRING "Optimization/debug flags")
+# common flags
+set(COMMON_FLAGS "\
+{% for mcu_flag in project.mcu_flags %}
+    {{ mcu_flag }} \
+{% endfor %}
+    -Wall \
+    -fno-common \
+    -fdata-sections \
+    -ffunction-sections \
+    -fmessage-length=0 \
+    ${OPTIMIZATION_FLAGS} \
+")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${COMMON_FLAGS}")
+# comparator standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_STANDARD 99)
+# linker options
+set(LINKER_SCRIPT "${PROJECT_SOURCE_DIR}/{{ project.ld_script }}")
+set(CMAKE_EXE_LINKER_FLAGS "-specs=nano.specs -specs=nosys.specs -Wl,-gc-sections -T ${LINKER_SCRIPT}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map")
+
+
+################################################################
+# Target definition
+################################################################
+# target definition
+add_executable("${PROJECT_NAME}.elf" "${PROJECT_SOURCES}")
+# configure bin/hex file generation
+set(HEX_FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.hex)
+set(BIN_FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
+add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
+        COMMENT "Building ${HEX_FILE} \nBuilding ${BIN_FILE}")
