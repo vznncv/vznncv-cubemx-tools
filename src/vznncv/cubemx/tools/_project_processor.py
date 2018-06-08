@@ -17,6 +17,22 @@ def generate_build_script(project_description, script_file):
         f.write(build_script_context)
 
 
+def generate_flush_script(project_description, script_file):
+    env = get_template_environment()
+    build_script_template = env.get_template('flush.sh')
+    build_script_context = build_script_template.render(build_dir=project_description.build_dir)
+    with open(script_file, 'w', encoding='utf-8') as f:
+        f.write(build_script_context)
+
+
+def generate_openocd_script(project_description, script_file):
+    env = get_template_environment()
+    build_script_template = env.get_template('openocd_stm.cfg')
+    build_script_context = build_script_template.render(stm_target="{}x".format(project_description.stm_series))
+    with open(script_file, 'w', encoding='utf-8') as f:
+        f.write(build_script_context)
+
+
 def write_file(dst_file, project_description, generate_fun, overwrite):
     if exists(dst_file):
         if overwrite:
@@ -57,4 +73,18 @@ def process_project(project_dir, overwrite=True):
         project_description=project_description,
         generate_fun=generate_build_script,
         overwrite=overwrite
+    )
+    # generate flush script
+    write_file(
+        dst_file=join(project_dir, 'flush.sh'),
+        project_description=project_description,
+        generate_fun=generate_flush_script,
+        overwrite=overwrite
+    )
+    # generate openocd script
+    write_file(
+        dst_file=join(project_dir, 'openocd_stm.cfg'),
+        project_description=project_description,
+        generate_fun=generate_openocd_script,
+        overwrite=False
     )
