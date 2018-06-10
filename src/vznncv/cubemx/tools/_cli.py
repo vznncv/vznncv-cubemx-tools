@@ -7,7 +7,7 @@ from vznncv.cubemx.tools._project_processor import process_project
 
 @click.group(context_settings={'help_option_names': ['-h', '--help']})
 def main():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 
 @main.command(name='generate-cmake-project', help='Generate CMakeLists.txt and OpenOCD scripts for CubeMX project')
