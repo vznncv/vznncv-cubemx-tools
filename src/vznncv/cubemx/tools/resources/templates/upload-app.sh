@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# helper script to upload compiled application to microcontroller using OpenOCD
 
 build_dir="{{ build_dir }}"
 openocd_script="openocd_stm.cfg"

@@ -20,4 +20,4 @@ class CMakeGeneratorTestCase(TestCase):
         self.check_file_exists_and_contains(join(project_dir, 'CMakeLists.txt'), 'project')
         self.check_file_exists_and_contains(join(project_dir, 'build.sh'), 'build_dir="build"')
         self.check_file_exists_and_contains(join(project_dir, 'openocd_stm.cfg'), 'source [find target/stm32f3x.cfg]')
-        self.check_file_exists_and_contains(join(project_dir, 'flush.sh'), 'build_dir="build"')
+        self.check_file_exists_and_contains(join(project_dir, 'upload-app.sh'), 'build_dir="build"')

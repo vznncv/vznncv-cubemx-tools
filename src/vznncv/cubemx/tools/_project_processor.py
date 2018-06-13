@@ -19,7 +19,7 @@ def generate_build_script(project_description, script_file):
 
 def generate_flush_script(project_description, script_file):
     env = get_template_environment()
-    build_script_template = env.get_template('flush.sh')
+    build_script_template = env.get_template('upload-app.sh')
     build_script_context = build_script_template.render(build_dir=project_description.build_dir)
     with open(script_file, 'w', encoding='utf-8') as f:
         f.write(build_script_context)
@@ -74,9 +74,9 @@ def process_project(project_dir, overwrite=True):
         generate_fun=generate_build_script,
         overwrite=overwrite
     )
-    # generate flush script
+    # generate upload script
     write_file(
-        dst_file=join(project_dir, 'flush.sh'),
+        dst_file=join(project_dir, 'upload-app.sh'),
         project_description=project_description,
         generate_fun=generate_flush_script,
         overwrite=overwrite
