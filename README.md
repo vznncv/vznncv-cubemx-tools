@@ -37,4 +37,4 @@ Besides ``CMakeLists.txt`` command generates the following files:
 - `penocd_stm.cfg` - openocd script. Probably you should adjust
                      it for your configuration.
 - `build.sh` - helper script to build project from console.
-- `flush.sh` - helper script to upload compiled project to microcontroller.
+- `upload-app.sh` - helper script to upload compiled project to microcontroller.
