@@ -73,12 +73,17 @@ def build_project_description(make_vars, project_dir, optimization_flags=None):
     build_dir = parse_make_var_path(make_vars.get('BUILD_DIR', 'build'))
     target = parse_make_var_single_value(make_vars['TARGET'])
 
-    c_sources = parse_make_var_paths(make_vars['C_SOURCES'])
-    asm_sources = parse_make_var_paths(make_vars['ASM_SOURCES'])
-    periflib_sources = parse_make_var_paths(make_vars['PERIFLIB_SOURCES'])
+    source_files = set()
+    for var_name, var_val in make_vars.items():
+        if var_name.lower().endswith('_sources'):
+            source_files.update(parse_make_var_paths(var_val))
+    source_files = sorted(source_files)
 
-    as_includes = parse_make_var_includes(make_vars['AS_INCLUDES'])
-    c_includes = parse_make_var_includes(make_vars['C_INCLUDES'])
+    include_dirs = set()
+    for var_name, var_val in make_vars.items():
+        if var_name.lower().endswith('_includes'):
+            include_dirs.update(parse_make_var_includes(var_val))
+    include_dirs = sorted(include_dirs)
 
     c_defs = parse_make_var_defines(make_vars['C_DEFS'])
     as_defs = parse_make_var_defines(make_vars['AS_DEFS'])
@@ -95,8 +100,8 @@ def build_project_description(make_vars, project_dir, optimization_flags=None):
         stm_series=stm_series,
         project_dir=project_dir,
 
-        source_files=sorted(set(c_sources) | set(asm_sources) | set(periflib_sources)),
-        include_dirs=sorted(set(c_includes) | set(as_includes)),
+        source_files=source_files,
+        include_dirs=include_dirs,
         definitions=sorted(set(c_defs) | set(as_defs)),
         mcu_flags=mcu_flags,
         optimization_flags=optimization_flags or '',

@@ -13,7 +13,7 @@ class CMakeGeneratorTestCase(TestCase):
         assert_that(text, contains_string(substring))
 
     def test_process_project(self):
-        project_dir = self.get_tmp_copy(join(self.FIXTURE_DIR, 'stm_project'))
+        project_dir = self.get_tmp_copy(join(self.FIXTURE_DIR, 'stm32f3_project'))
 
         process_project(project_dir, overwrite=True)
 

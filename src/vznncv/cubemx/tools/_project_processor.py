@@ -1,5 +1,8 @@
+import os
+
 import logging
 from os.path import join, exists
+import stat
 
 from vznncv.cubemx.tools._cmake_generator import generate_cmake_from_make
 from vznncv.cubemx.tools._make_parser import parse_variables
@@ -9,12 +12,24 @@ from vznncv.cubemx.tools._utils import get_template_environment
 logger = logging.getLogger(__name__)
 
 
+def add_executable_flag(script_file):
+    """
+    Try to add executable flag to file.
+    """
+    try:
+        statinfo = os.stat(script_file)
+        os.chmod(script_file, statinfo.st_mode | stat.S_IEXEC)
+    except Exception:
+        logger.warning("Fail to make file '{}' executable".format(script_file))
+
+
 def generate_build_script(project_description, script_file):
     env = get_template_environment()
     build_script_template = env.get_template('build.sh')
     build_script_context = build_script_template.render(build_dir=project_description.build_dir)
     with open(script_file, 'w', encoding='utf-8') as f:
         f.write(build_script_context)
+    add_executable_flag(script_file)
 
 
 def generate_flush_script(project_description, script_file):
@@ -23,6 +38,7 @@ def generate_flush_script(project_description, script_file):
     build_script_context = build_script_template.render(build_dir=project_description.build_dir)
     with open(script_file, 'w', encoding='utf-8') as f:
         f.write(build_script_context)
+    add_executable_flag(script_file)
 
 
 def generate_openocd_script(project_description, script_file):

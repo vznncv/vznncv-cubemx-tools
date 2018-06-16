@@ -7,7 +7,7 @@ from vznncv.cubemx.tools._make_parser import parse_variables
 
 class MakeParserTestCase(TestCase):
     def test_variable_parsing(self):
-        makefile = join(self.FIXTURE_DIR, 'stm_project', 'Makefile')
+        makefile = join(self.FIXTURE_DIR, 'stm32f3_project', 'Makefile')
         makefile_vars = parse_variables(makefile)
 
         assert_that(makefile_vars, has_entries({

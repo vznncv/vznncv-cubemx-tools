@@ -14,4 +14,9 @@ echo "OpenOCD config: $openocd_script" 1>&2
 echo "elf file: $elf_target" 1>&2
 echo "Flush ..." 1>&2
 openocd --file "$openocd_script" --command "program \"${elf_target}\" verify reset exit"
-echo "Complete" 1>&2
+if [ $? -eq 0 ]; then
+    echo "Complete" 1>&2
+else
+    echo "Program uploading failed" 1>&2
+    exit 1
+fi

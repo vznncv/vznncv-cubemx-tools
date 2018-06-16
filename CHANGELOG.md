@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Change generated script name for program uploading from `flush.sh` to `upload-app.sh`
   to make name clearer.
+### Fixed
+- Fixed source and header file extraction from `Makefile`
 
 ## [0.1.0] - 2018-06-10
 ### Added

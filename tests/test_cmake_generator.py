@@ -9,7 +9,7 @@ from vznncv.cubemx.tools._project_description import build_project_description
 
 class CMakeGeneratorTestCase(TestCase):
     def test_cmake_generation(self):
-        project_dir = join(self.FIXTURE_DIR, 'stm_project')
+        project_dir = join(self.FIXTURE_DIR, 'stm32f3_project')
         make_file = join(project_dir, 'Makefile')
         make_vars = parse_variables(make_file)
         project_description = build_project_description(

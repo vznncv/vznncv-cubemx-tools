@@ -48,16 +48,20 @@ file(GLOB PROJECT_SOURCES
     "{{ glob_expression }}"
 {% endfor %}
 )
+{% if  project.source.remove_files %}
 list(REMOVE_ITEM PROJECT_SOURCES
 {% for remove_file in project.source.remove_files %}
     "${CMAKE_CURRENT_SOURCE_DIR}/{{ remove_file }}"
 {% endfor %}
 )
+{% endif %}
+{% if  project.source.files %}
 list(APPEND PROJECT_SOURCES
 {% for file in project.source.files %}
     "{{ file }}"
 {% endfor %}
 )
+{% endif %}
 
 
 ################################################################
