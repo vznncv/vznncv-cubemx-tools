@@ -73,7 +73,8 @@ def process_project(project_dir, overwrite=True):
     make_vars = parse_variables(make_file)
     project_description = build_project_description(
         make_vars=make_vars,
-        project_dir=project_dir
+        project_dir=project_dir,
+        optimization_flags=["-g", "-O0"]
     )
 
     # generate cmake

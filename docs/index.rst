@@ -6,3 +6,4 @@ vznncv-cubemx-tools library
 
    getting_started
    blue_pill
+   qt_creator_tutorial
