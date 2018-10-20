@@ -49,7 +49,12 @@ Configuration steps
      CMAKE_CXX_COMPILER_FORCED:BOOL=ON
      CMAKE_C_COMPILER_FORCED:BOOL=ON
 
+
    .. image:: images/qt_creator/pic_7_run_and_build_kit_cmake.png
+
+   .. note:: If you use some string parameter in the **CMake Configuration**, you shouldn't
+             escape it with quotes. For example you should write ``PROJECT_OPTIMIZATION_FLAGS:STRING=-g -O0``
+             instead of ``PROJECT_OPTIMIZATION_FLAGS:STRING="-g -O0"``
 
 #. Go to **Genera** tab and change "Default build directory" to ``build/%{CurrentBuild:Name}`` (optional)
 
@@ -58,6 +63,9 @@ Configuration steps
 #. Open STM32CubeMX and create new "make" project.
 
    .. image:: images/qt_creator/pic_9_cubemx.png
+
+   .. note:: ensure that pins for debug interface are enabled. Otherwise after first program
+             uploading you won't be able to reprogram an microcontroller.
 
 #. Run from project folder the command to create ``CMakeLists.txt`` file::
 

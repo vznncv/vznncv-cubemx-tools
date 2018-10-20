@@ -49,6 +49,14 @@ def generate_openocd_script(project_description, script_file):
         f.write(build_script_context)
 
 
+def generate_gitignore(project_description, script_file):
+    env = get_template_environment()
+    gitignore_template = env.get_template('gitignore_template')
+    gitignore_text = gitignore_template.render()
+    with open(script_file, 'w', encoding='utf-8') as f:
+        f.write(gitignore_text)
+
+
 def write_file(dst_file, project_description, generate_fun, overwrite):
     if exists(dst_file):
         if overwrite:
@@ -103,5 +111,12 @@ def process_project(project_dir, overwrite=True):
         dst_file=join(project_dir, 'openocd_stm.cfg'),
         project_description=project_description,
         generate_fun=generate_openocd_script,
+        overwrite=False
+    )
+    # generate .gitignore
+    write_file(
+        dst_file=join(project_dir, '.gitignore'),
+        project_description=project_description,
+        generate_fun=generate_gitignore,
         overwrite=False
     )

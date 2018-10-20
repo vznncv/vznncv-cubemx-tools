@@ -1,0 +1,6 @@
+# IDE settings
+/*.user
+
+# build directories
+/build*
+/BUILD*
