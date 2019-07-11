@@ -89,8 +89,13 @@ def build_project_description(make_vars, project_dir, optimization_flags=None, a
             include_dirs.update(parse_make_var_includes(var_val))
 
     if autodiscover_sources:
+        # try to autodiscover sources automatically
         for root, _, files in os.walk(project_dir):
             base_dir = relpath(root, project_dir)
+            # ignore any build directories
+            if 'build' in base_dir.lower():
+                continue
+
             has_header = False
             for filename in files:
                 file_ext = splitext(filename)[1]
