@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Added automatic source files discovery option ('--autodiscover-sources')
 ### Changed
 - Improved documentation of a project creation in the QT creator
 - Added `.gitignore` file generation

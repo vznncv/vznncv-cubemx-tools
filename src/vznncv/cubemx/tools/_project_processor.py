@@ -69,11 +69,12 @@ def write_file(dst_file, project_description, generate_fun, overwrite):
         generate_fun(project_description, dst_file)
 
 
-def process_project(project_dir, overwrite=True):
+def process_project(project_dir, overwrite=True, autodiscover_sources=False):
     """
     Prepare generated cubemx project for cmake and openocd usage.
 
     :param project_dir: project_directory
+    :param autodiscover_sources: autodiscover source files instead of Makefile usage
     :param overwrite: overwrite existed files
     """
     # parse makefile
@@ -82,7 +83,8 @@ def process_project(project_dir, overwrite=True):
     project_description = build_project_description(
         make_vars=make_vars,
         project_dir=project_dir,
-        optimization_flags=["-g", "-O0"]
+        optimization_flags=["-g", "-O0"],
+        autodiscover_sources=autodiscover_sources
     )
 
     # generate cmake
